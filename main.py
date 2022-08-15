@@ -149,10 +149,15 @@ class HandDetector:
         else:
             return length, info
 
- 
+
+# very important patch for linux kernel-USB 2.0 camera interfacing
 cap = cv2.VideoCapture(0)
-cap.set(3, 1280)
-cap.set(4, 720)
+cap.set(cv2.CAP_PROP_FPS, 30.0)
+cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
+cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
+
 success, img = cap.read()
 h, w, _ = img.shape
 detector = HandDetector(detectionCon=0.8, maxHands=2)
@@ -179,4 +184,6 @@ while True:
  
     # Display
     cv2.imshow("Image", img)
-    cv2.waitKey(1)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
